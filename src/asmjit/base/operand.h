@@ -585,6 +585,12 @@ public:                                                                       \
   static ASMJIT_INLINE REG_T fromSignature(uint32_t signature, uint32_t rId) ASMJIT_NOEXCEPT { \
     return REG_T(Init, signature, rId);                                       \
   }                                                                           \
+  /* TODO: Depreceted */                                                      \
+  ASMJIT_INLINE REG_T m() const noexcept { return *this; }                    \
+  ASMJIT_INLINE REG_T m8() const noexcept { return *this; }                   \
+  ASMJIT_INLINE REG_T m16() const noexcept { return *this; }                  \
+  ASMJIT_INLINE REG_T m32() const noexcept { return *this; }                  \
+  ASMJIT_INLINE REG_T m64() const noexcept { return *this; }                  \
                                                                               \
   ASMJIT_INLINE REG_T& operator=(const REG_T& other) ASMJIT_NOEXCEPT {        \
     copyFrom(other); return *this;                                            \
