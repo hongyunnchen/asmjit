@@ -540,9 +540,16 @@ Error ZoneBitVector::_resize(ZoneHeap* heap, size_t newLength, size_t idealCapac
 }
 
 Error ZoneBitVector::_append(ZoneHeap* heap, bool value) noexcept {
-  size_t threshold = Globals::kAllocThreshold * 8;
-  size_t idealCapacity = _capacity <= threshold ? _capacity * 2 : _capacity + threshold;
+  size_t kThreshold = Globals::kAllocThreshold * 8;
   size_t newLength = _length + 1;
+  size_t idealCapacity = _capacity;
+
+  if (idealCapacity < 128)
+    idealCapacity = 128;
+  else if (idealCapacity <= kThreshold)
+    idealCapacity *= 2;
+  else
+    idealCapacity += kThreshold;
 
   if (ASMJIT_UNLIKELY(idealCapacity < _capacity)) {
     // It's technically impossible that `_length + 1` overflows.

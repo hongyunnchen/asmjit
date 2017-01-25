@@ -982,6 +982,13 @@ public:
   // [Memory Management]
   // --------------------------------------------------------------------------
 
+  ASMJIT_INLINE void release(ZoneHeap* heap) noexcept {
+    if (_data != nullptr) {
+      heap->release(_data, _capacity / 8);
+      reset();
+    }
+  }
+
   ASMJIT_INLINE Error resize(ZoneHeap* heap, size_t newLength, bool newBitsValue = false) noexcept {
     return _resize(heap, newLength, newLength, newBitsValue);
   }
