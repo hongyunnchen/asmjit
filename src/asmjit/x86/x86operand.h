@@ -376,12 +376,12 @@ public:
 
   // DEPRECATED in next-wip.
   ASMJIT_INLINE X86Mem m(int32_t disp = 0) const noexcept {
-    return X86Mem(*this, disp, 0, Mem::kSignatureMemRegHomeFlag);
+    return X86Mem(*this, disp, getSize(), Mem::kSignatureMemRegHomeFlag);
   }
 
   //! \overload
   ASMJIT_INLINE X86Mem m(const X86Reg& index, uint32_t shift = 0, int32_t disp = 0) const noexcept {
-    return X86Mem(*this, index, shift, disp, 0, Mem::kSignatureMemRegHomeFlag);
+    return X86Mem(*this, index, shift, disp, getSize(), Mem::kSignatureMemRegHomeFlag);
   }
 
   //! Cast this variable to 8-bit memory operand.

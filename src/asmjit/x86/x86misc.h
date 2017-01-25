@@ -138,12 +138,12 @@ struct X86RegCount {
     struct {
       //! Count of GP registers.
       uint8_t _gp;
+      //! Count of XMM|YMM|ZMM registers.
+      uint8_t _vec;
       //! Count of MMX registers.
       uint8_t _mm;
       //! Count of K registers.
       uint8_t _k;
-      //! Count of XMM|YMM|ZMM registers.
-      uint8_t _vec;
     };
 
     uint8_t _regs[4];
@@ -182,18 +182,18 @@ struct X86RegMask {
 
     switch (kind) {
       case X86Reg::kKindGp : return (static_cast<uint32_t>(_gp ) & mask) != 0;
+      case X86Reg::kKindVec: return (static_cast<uint32_t>(_vec) & mask) != 0;
       case X86Reg::kKindMm : return (static_cast<uint32_t>(_mm ) & mask) != 0;
       case X86Reg::kKindK  : return (static_cast<uint32_t>(_k  ) & mask) != 0;
-      case X86Reg::kKindVec: return (static_cast<uint32_t>(_vec) & mask) != 0;
     }
 
     return false;
   }
 
   ASMJIT_INLINE bool hasGp(uint32_t mask = 0xFFFFFFFFU) const noexcept { return has(X86Reg::kKindGp, mask); }
+  ASMJIT_INLINE bool hasVec(uint32_t mask = 0xFFFFFFFFU) const noexcept { return has(X86Reg::kKindVec, mask); }
   ASMJIT_INLINE bool hasMm(uint32_t mask = 0xFFFFFFFFU) const noexcept { return has(X86Reg::kKindMm, mask); }
   ASMJIT_INLINE bool hasK(uint32_t mask = 0xFFFFFFFFU) const noexcept { return has(X86Reg::kKindK, mask); }
-  ASMJIT_INLINE bool hasVec(uint32_t mask = 0xFFFFFFFFU) const noexcept { return has(X86Reg::kKindVec, mask); }
 
   // --------------------------------------------------------------------------
   // [Get]
@@ -204,18 +204,18 @@ struct X86RegMask {
 
     switch (kind) {
       case X86Reg::kKindGp : return _gp;
+      case X86Reg::kKindVec: return _vec;
       case X86Reg::kKindMm : return _mm;
       case X86Reg::kKindK  : return _k;
-      case X86Reg::kKindVec: return _vec;
     }
 
     return 0;
   }
 
   ASMJIT_INLINE uint32_t getGp() const noexcept { return get(X86Reg::kKindGp); }
+  ASMJIT_INLINE uint32_t getVec() const noexcept { return get(X86Reg::kKindVec); }
   ASMJIT_INLINE uint32_t getMm() const noexcept { return get(X86Reg::kKindMm); }
   ASMJIT_INLINE uint32_t getK() const noexcept { return get(X86Reg::kKindK); }
-  ASMJIT_INLINE uint32_t getVec() const noexcept { return get(X86Reg::kKindVec); }
 
   // --------------------------------------------------------------------------
   // [Zero]
@@ -226,16 +226,16 @@ struct X86RegMask {
 
     switch (kind) {
       case X86Reg::kKindGp : _gp  = 0; break;
+      case X86Reg::kKindVec: _vec = 0; break;
       case X86Reg::kKindMm : _mm  = 0; break;
       case X86Reg::kKindK  : _k   = 0; break;
-      case X86Reg::kKindVec: _vec = 0; break;
     }
   }
 
   ASMJIT_INLINE void zeroGp() noexcept { zero(X86Reg::kKindGp); }
+  ASMJIT_INLINE void zeroVec() noexcept { zero(X86Reg::kKindVec); }
   ASMJIT_INLINE void zeroMm() noexcept { zero(X86Reg::kKindMm); }
   ASMJIT_INLINE void zeroK() noexcept { zero(X86Reg::kKindK); }
-  ASMJIT_INLINE void zeroVec() noexcept { zero(X86Reg::kKindVec); }
 
   // --------------------------------------------------------------------------
   // [Set]
@@ -257,9 +257,9 @@ struct X86RegMask {
   }
 
   ASMJIT_INLINE void setGp(uint32_t mask) noexcept { return set(X86Reg::kKindGp, mask); }
+  ASMJIT_INLINE void setVec(uint32_t mask) noexcept { return set(X86Reg::kKindVec, mask); }
   ASMJIT_INLINE void setMm(uint32_t mask) noexcept { return set(X86Reg::kKindMm, mask); }
   ASMJIT_INLINE void setK(uint32_t mask) noexcept { return set(X86Reg::kKindK, mask); }
-  ASMJIT_INLINE void setVec(uint32_t mask) noexcept { return set(X86Reg::kKindVec, mask); }
 
   // --------------------------------------------------------------------------
   // [And]
@@ -281,9 +281,9 @@ struct X86RegMask {
   }
 
   ASMJIT_INLINE void andGp(uint32_t mask) noexcept { and_(X86Reg::kKindGp, mask); }
+  ASMJIT_INLINE void andVec(uint32_t mask) noexcept { and_(X86Reg::kKindVec, mask); }
   ASMJIT_INLINE void andMm(uint32_t mask) noexcept { and_(X86Reg::kKindMm, mask); }
   ASMJIT_INLINE void andK(uint32_t mask) noexcept { and_(X86Reg::kKindK, mask); }
-  ASMJIT_INLINE void andVec(uint32_t mask) noexcept { and_(X86Reg::kKindVec, mask); }
 
   // --------------------------------------------------------------------------
   // [AndNot]
@@ -305,9 +305,9 @@ struct X86RegMask {
   }
 
   ASMJIT_INLINE void andNotGp(uint32_t mask) noexcept { andNot(X86Reg::kKindGp, mask); }
+  ASMJIT_INLINE void andNotVec(uint32_t mask) noexcept { andNot(X86Reg::kKindVec, mask); }
   ASMJIT_INLINE void andNotMm(uint32_t mask) noexcept { andNot(X86Reg::kKindMm, mask); }
   ASMJIT_INLINE void andNotK(uint32_t mask) noexcept { andNot(X86Reg::kKindK, mask); }
-  ASMJIT_INLINE void andNotVec(uint32_t mask) noexcept { andNot(X86Reg::kKindVec, mask); }
 
   // --------------------------------------------------------------------------
   // [Or]
@@ -328,9 +328,9 @@ struct X86RegMask {
   }
 
   ASMJIT_INLINE void orGp(uint32_t mask) noexcept { return or_(X86Reg::kKindGp, mask); }
+  ASMJIT_INLINE void orVec(uint32_t mask) noexcept { return or_(X86Reg::kKindVec, mask); }
   ASMJIT_INLINE void orMm(uint32_t mask) noexcept { return or_(X86Reg::kKindMm, mask); }
   ASMJIT_INLINE void orK(uint32_t mask) noexcept { return or_(X86Reg::kKindK, mask); }
-  ASMJIT_INLINE void orVec(uint32_t mask) noexcept { return or_(X86Reg::kKindVec, mask); }
 
   // --------------------------------------------------------------------------
   // [Xor]
@@ -352,9 +352,9 @@ struct X86RegMask {
   }
 
   ASMJIT_INLINE void xorGp(uint32_t mask) noexcept { xor_(X86Reg::kKindGp, mask); }
+  ASMJIT_INLINE void xorVec(uint32_t mask) noexcept { xor_(X86Reg::kKindVec, mask); }
   ASMJIT_INLINE void xorMm(uint32_t mask) noexcept { xor_(X86Reg::kKindMm, mask); }
   ASMJIT_INLINE void xorK(uint32_t mask) noexcept { xor_(X86Reg::kKindK, mask); }
-  ASMJIT_INLINE void xorVec(uint32_t mask) noexcept { xor_(X86Reg::kKindVec, mask); }
 
   // --------------------------------------------------------------------------
   // [Members]

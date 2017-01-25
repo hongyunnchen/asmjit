@@ -526,8 +526,6 @@ public:
   CBNode* _stop;                         //!< Stop node.
   CBNode* _extraBlock;                   //!< Node that is used to insert extra code after the function body.
 
-  TraceNodeFunc _traceNode;              //!< Only non-null if ASMJIT_TRACE is enabled.
-
   //! \internal
   //!
   //! Offset (how many bytes to add) to `VarMap` to get `TiedReg` array. Used
