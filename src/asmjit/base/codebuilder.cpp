@@ -569,7 +569,7 @@ Error CodeBuilder::runPasses() {
 
   ZoneVector<CBPass*>& passes = _cbPasses;
   for (size_t i = 0, len = passes.getLength(); i < len; i++) {
-        CBPass* pass = passes[i];
+    CBPass* pass = passes[i];
 
     _cbPassZone.reset();
     err = pass->run(&_cbPassZone);

@@ -119,7 +119,7 @@ struct Operand_ {
     //! Maximum valid packed-id.
     kPackedIdMax    = 0xFFFFFFFFU,
     //! Count of valid packed-ids.
-    kPackedIdCount  = kPackedIdMax - kPackedIdMin + 1
+    kPackedIdCount  = static_cast<unsigned int>(kPackedIdMax - kPackedIdMin + 1)
   };
 
   // --------------------------------------------------------------------------
@@ -133,7 +133,7 @@ struct Operand_ {
   //! a single uint32_t to contain either physical register id or virtual
   //! register id represented as `packed-id`. This concept is used also for
   //! labels to make the API consistent.
-  static ASMJIT_INLINE bool isPackedId(uint32_t id) noexcept { return id - kPackedIdMin < kPackedIdCount; }
+  static ASMJIT_INLINE bool isPackedId(uint32_t id) noexcept { return id - kPackedIdMin < static_cast<unsigned int>(kPackedIdCount); }
   //! Convert a real-id into a packed-id that can be stored in Operand.
   static ASMJIT_INLINE uint32_t packId(uint32_t id) noexcept { return id + kPackedIdMin; }
   //! Convert a packed-id back to real-id.

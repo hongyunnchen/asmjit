@@ -273,7 +273,7 @@ Error CodeCompiler::setArg(uint32_t argIndex, const Reg& r) {
 
 VirtReg* CodeCompiler::newVirtReg(uint32_t typeId, uint32_t signature, const char* name) noexcept {
   size_t index = _vRegArray.getLength();
-  if (ASMJIT_UNLIKELY(index >= Operand::kPackedIdCount))
+  if (ASMJIT_UNLIKELY(index >= static_cast<unsigned int>(Operand::kPackedIdCount)))
     return nullptr;
 
   VirtReg* vReg;

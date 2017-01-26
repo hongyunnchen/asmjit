@@ -801,6 +801,8 @@ Error RAPass::_dumpBlockLiveness(StringBuilder& sb, const RABlock* block) noexce
     if (n)
       sb.appendString("]\n");
   }
+
+  return kErrorOk;
 }
 #endif
 
