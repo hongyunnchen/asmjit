@@ -1132,7 +1132,7 @@ public:
   // [Init / Reset]
   // --------------------------------------------------------------------------
 
-  ASMJIT_API Error init(ZoneHeap* heap) noexcept { return _init(heap, kMidBlockIndex); }
+  ASMJIT_INLINE Error init(ZoneHeap* heap) noexcept { return _init(heap, kMidBlockIndex); }
 
   // --------------------------------------------------------------------------
   // [Ops]
