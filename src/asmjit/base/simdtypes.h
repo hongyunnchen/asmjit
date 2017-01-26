@@ -164,7 +164,7 @@ union Data64 {
   //! Set all eight 8-bit unsigned integers.
   ASMJIT_INLINE void setU8(uint8_t x0) noexcept {
     if (ASMJIT_ARCH_64BIT) {
-      uint64_t xq = static_cast<uint64_t>(x0) * UINT64_C(0x0101010101010101);
+      uint64_t xq = static_cast<uint64_t>(x0) * ASMJIT_UINT64_C(0x0101010101010101);
       uq[0] = xq;
     }
     else {
@@ -198,7 +198,7 @@ union Data64 {
   //! Set all four 16-bit unsigned integers.
   ASMJIT_INLINE void setU16(uint16_t x0) noexcept {
     if (ASMJIT_ARCH_64BIT) {
-      uint64_t xq = static_cast<uint64_t>(x0) * UINT64_C(0x0001000100010001);
+      uint64_t xq = static_cast<uint64_t>(x0) * ASMJIT_UINT64_C(0x0001000100010001);
       uq[0] = xq;
     }
     else {
@@ -466,7 +466,7 @@ union Data128 {
   //! Set all sixteen 8-bit unsigned integers.
   ASMJIT_INLINE void setU8(uint8_t x0) noexcept  {
     if (ASMJIT_ARCH_64BIT) {
-      uint64_t xq = static_cast<uint64_t>(x0) * UINT64_C(0x0101010101010101);
+      uint64_t xq = static_cast<uint64_t>(x0) * ASMJIT_UINT64_C(0x0101010101010101);
       uq[0] = xq;
       uq[1] = xq;
     }
@@ -513,7 +513,7 @@ union Data128 {
   //! Set all eight 16-bit unsigned integers.
   ASMJIT_INLINE void setU16(uint16_t x0) noexcept {
     if (ASMJIT_ARCH_64BIT) {
-      uint64_t xq = static_cast<uint64_t>(x0) * UINT64_C(0x0001000100010001);
+      uint64_t xq = static_cast<uint64_t>(x0) * ASMJIT_UINT64_C(0x0001000100010001);
       uq[0] = xq;
       uq[1] = xq;
     }
@@ -838,14 +838,14 @@ union Data256 {
   //! Set all thirty two 8-bit unsigned integers.
   ASMJIT_INLINE void setU8(uint8_t x0) noexcept {
     if (ASMJIT_ARCH_64BIT) {
-      uint64_t xq = static_cast<uint64_t>(x0)* UINT64_C(0x0101010101010101);
+      uint64_t xq = static_cast<uint64_t>(x0) * ASMJIT_UINT64_C(0x0101010101010101);
       uq[0] = xq;
       uq[1] = xq;
       uq[2] = xq;
       uq[3] = xq;
     }
     else {
-      uint32_t xd = static_cast<uint32_t>(x0)* static_cast<uint32_t>(0x01010101U);
+      uint32_t xd = static_cast<uint32_t>(x0) * static_cast<uint32_t>(0x01010101U);
       ud[0] = xd;
       ud[1] = xd;
       ud[2] = xd;
@@ -907,14 +907,14 @@ union Data256 {
   //! Set all eight 16-bit unsigned integers.
   ASMJIT_INLINE void setU16(uint16_t x0) noexcept {
     if (ASMJIT_ARCH_64BIT) {
-      uint64_t xq = static_cast<uint64_t>(x0)* UINT64_C(0x0001000100010001);
+      uint64_t xq = static_cast<uint64_t>(x0) * ASMJIT_UINT64_C(0x0001000100010001);
       uq[0] = xq;
       uq[1] = xq;
       uq[2] = xq;
       uq[3] = xq;
     }
     else {
-      uint32_t xd = static_cast<uint32_t>(x0)* static_cast<uint32_t>(0x00010001U);
+      uint32_t xd = static_cast<uint32_t>(x0) * static_cast<uint32_t>(0x00010001U);
       ud[0] = xd;
       ud[1] = xd;
       ud[2] = xd;

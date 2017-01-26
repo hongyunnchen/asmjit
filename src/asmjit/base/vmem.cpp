@@ -275,14 +275,14 @@ static MemNode* vMemMgrCreateNode(VMemMgr* self, size_t size, size_t density) no
   size_t blocks = (vSize / density);
   size_t bsize = (((blocks + 7) >> 3) + sizeof(size_t) - 1) & ~(size_t)(sizeof(size_t) - 1);
 
-  MemNode* node = static_cast<MemNode*>(ASMJIT_ALLOC(sizeof(MemNode)));
-  uint8_t* data = static_cast<uint8_t*>(ASMJIT_ALLOC(bsize * 2));
+  MemNode* node = static_cast<MemNode*>(Internal::allocMemory(sizeof(MemNode)));
+  uint8_t* data = static_cast<uint8_t*>(Internal::allocMemory(bsize * 2));
 
   // Out of memory.
   if (!node || !data) {
     vMemMgrReleaseVMem(self, vmem, vSize);
-    if (node) ASMJIT_FREE(node);
-    if (data) ASMJIT_FREE(data);
+    if (node) Internal::releaseMemory(node);
+    if (data) Internal::releaseMemory(data);
     return nullptr;
   }
 
@@ -533,12 +533,12 @@ static void* vMemMgrAllocPermanent(VMemMgr* self, size_t vSize) noexcept {
     size_t nodeSize = permanentNodeSize;
     if (nodeSize < vSize) nodeSize = vSize;
 
-    node = static_cast<PermanentNode*>(ASMJIT_ALLOC(sizeof(PermanentNode)));
+    node = static_cast<PermanentNode*>(Internal::allocMemory(sizeof(PermanentNode)));
     if (!node) return nullptr;
 
     node->mem = vMemMgrAllocVMem(self, nodeSize, &node->size);
     if (!node->mem) {
-      ASMJIT_FREE(node);
+      Internal::releaseMemory(node);
       return nullptr;
     }
 
@@ -697,8 +697,8 @@ static void vMemMgrReset(VMemMgr* self, bool keepVirtualMemory) noexcept {
     if (!keepVirtualMemory)
       vMemMgrReleaseVMem(self, node->mem, node->size);
 
-    ASMJIT_FREE(node->baUsed);
-    ASMJIT_FREE(node);
+    Internal::releaseMemory(node->baUsed);
+    Internal::releaseMemory(node);
 
     node = next;
   }
@@ -751,7 +751,7 @@ VMemMgr::~VMemMgr() noexcept {
   PermanentNode* node = _permanent;
   while (node) {
     PermanentNode* prev = node->prev;
-    ASMJIT_FREE(node);
+    Internal::releaseMemory(node);
     node = prev;
   }
 }
@@ -842,7 +842,7 @@ Error VMemMgr::release(void* p) noexcept {
     // Free memory associated with node (this memory is not accessed
     // anymore so it's safe).
     vMemMgrReleaseVMem(this, node->mem, node->size);
-    ASMJIT_FREE(node->baUsed);
+    Internal::releaseMemory(node->baUsed);
 
     node->baUsed = nullptr;
     node->baCont = nullptr;
@@ -852,7 +852,7 @@ Error VMemMgr::release(void* p) noexcept {
 
     // Remove node. This function can return different node than
     // passed into, but data is copied into previous node if needed.
-    ASMJIT_FREE(vMemMgrRemoveNode(this, node));
+    Internal::releaseMemory(vMemMgrRemoveNode(this, node));
     ASMJIT_ASSERT(vMemMgrCheckTree(this));
   }
 
@@ -992,8 +992,8 @@ UNIT(base_vmem) {
 
   INFO("Memory alloc/free test - %d allocations", static_cast<int>(kCount));
 
-  void** a = (void**)ASMJIT_ALLOC(sizeof(void*) * kCount);
-  void** b = (void**)ASMJIT_ALLOC(sizeof(void*) * kCount);
+  void** a = (void**)Internal::allocMemory(sizeof(void*) * kCount);
+  void** b = (void**)Internal::allocMemory(sizeof(void*) * kCount);
 
   EXPECT(a != nullptr && b != nullptr,
     "Couldn't allocate %u bytes on heap", kCount * 2);
@@ -1024,7 +1024,7 @@ UNIT(base_vmem) {
     EXPECT(a[i] != nullptr,
       "Couldn't allocate %d bytes of virtual memory", r);
 
-    b[i] = ASMJIT_ALLOC(r);
+    b[i] = Internal::allocMemory(r);
     EXPECT(b[i] != nullptr,
       "Couldn't allocate %d bytes on heap", r);
 
@@ -1040,7 +1040,7 @@ UNIT(base_vmem) {
     VMemTest_verify(a[i], b[i]);
     EXPECT(memmgr.release(a[i]) == kErrorOk,
       "Failed to free %p", a[i]);
-    ASMJIT_FREE(b[i]);
+    Internal::releaseMemory(b[i]);
   }
   VMemTest_stats(memmgr);
 
@@ -1052,7 +1052,7 @@ UNIT(base_vmem) {
     EXPECT(a[i] != nullptr,
       "Couldn't allocate %d bytes of virtual memory", r);
 
-    b[i] = ASMJIT_ALLOC(r);
+    b[i] = Internal::allocMemory(r);
     EXPECT(b[i] != nullptr,
       "Couldn't allocate %d bytes on heap");
 
@@ -1065,12 +1065,12 @@ UNIT(base_vmem) {
     VMemTest_verify(a[i], b[i]);
     EXPECT(memmgr.release(a[i]) == kErrorOk,
       "Failed to free %p", a[i]);
-    ASMJIT_FREE(b[i]);
+    Internal::releaseMemory(b[i]);
   }
   VMemTest_stats(memmgr);
 
-  ASMJIT_FREE(a);
-  ASMJIT_FREE(b);
+  Internal::releaseMemory(a);
+  Internal::releaseMemory(b);
 }
 #endif // ASMJIT_TEST
 

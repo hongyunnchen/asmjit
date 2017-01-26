@@ -60,7 +60,7 @@ static void CodeHolder_resetInternal(CodeHolder* self, bool releaseMemory) noexc
   for (size_t i = 0; i < numSections; i++) {
     SectionEntry* section = self->_sections[i];
     if (section->_buffer.hasData() && !section->_buffer.isExternal())
-      ASMJIT_FREE(section->_buffer._data);
+      Internal::releaseMemory(section->_buffer._data);
     section->_buffer._data = nullptr;
     section->_buffer._capacity = 0;
   }
@@ -270,9 +270,9 @@ static Error CodeHolder_reserveInternal(CodeHolder* self, CodeBuffer* cb, size_t
   uint8_t* newData;
 
   if (oldData && !cb->isExternal())
-    newData = static_cast<uint8_t*>(ASMJIT_REALLOC(oldData, n));
+    newData = static_cast<uint8_t*>(Internal::reallocMemory(oldData, n));
   else
-    newData = static_cast<uint8_t*>(ASMJIT_ALLOC(n));
+    newData = static_cast<uint8_t*>(Internal::allocMemory(n));
 
   if (ASMJIT_UNLIKELY(!newData))
     return DebugUtils::errored(kErrorNoHeapMemory);

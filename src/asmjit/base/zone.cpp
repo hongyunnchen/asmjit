@@ -65,14 +65,14 @@ void Zone::reset(bool releaseMemory) noexcept {
     Block* next = cur->next;
     do {
       Block* prev = cur->prev;
-      ASMJIT_FREE(cur);
+      Internal::releaseMemory(cur);
       cur = prev;
     } while (cur);
 
     cur = next;
     while (cur) {
       next = cur->next;
-      ASMJIT_FREE(cur);
+      Internal::releaseMemory(cur);
       cur = next;
     }
 
@@ -125,7 +125,7 @@ void* Zone::_alloc(size_t size) noexcept {
     return nullptr;
 
   blockSize += blockAlignment;
-  Block* newBlock = static_cast<Block*>(ASMJIT_ALLOC(sizeof(Block) + blockSize));
+  Block* newBlock = static_cast<Block*>(Internal::allocMemory(sizeof(Block) + blockSize));
 
   if (ASMJIT_UNLIKELY(!newBlock))
     return nullptr;
@@ -216,7 +216,7 @@ void ZoneHeap::reset(Zone* zone) noexcept {
   DynamicBlock* block = _dynamicBlocks;
   while (block) {
     DynamicBlock* next = block->next;
-    ASMJIT_FREE(block);
+    Internal::releaseMemory(block);
     block = next;
   }
 
@@ -292,7 +292,7 @@ void* ZoneHeap::_alloc(size_t size, size_t& allocatedSize) noexcept {
     if (ASMJIT_UNLIKELY(overhead >= ~static_cast<size_t>(0) - size))
       return nullptr;
 
-    void* p = ASMJIT_ALLOC(size + overhead);
+    void* p = Internal::allocMemory(size + overhead);
     if (ASMJIT_UNLIKELY(!p)) {
       allocatedSize = 0;
       return nullptr;
@@ -348,7 +348,7 @@ void ZoneHeap::_releaseDynamic(void* p, size_t size) noexcept {
   if (next)
     next->prev = prev;
 
-  ASMJIT_FREE(block);
+  Internal::releaseMemory(block);
 }
 
 // ============================================================================

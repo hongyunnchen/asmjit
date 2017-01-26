@@ -31,7 +31,7 @@ StringBuilder::StringBuilder() noexcept
 
 StringBuilder::~StringBuilder() noexcept {
   if (_canFree)
-    ASMJIT_FREE(_data);
+    Internal::releaseMemory(_data);
 }
 
 // ============================================================================
@@ -58,14 +58,14 @@ ASMJIT_FAVOR_SIZE char* StringBuilder::prepare(uint32_t op, size_t len) noexcept
       if (to < 256 - sizeof(intptr_t))
         to = 256 - sizeof(intptr_t);
 
-      char* newData = static_cast<char*>(ASMJIT_ALLOC(to + sizeof(intptr_t)));
+      char* newData = static_cast<char*>(Internal::allocMemory(to + sizeof(intptr_t)));
       if (!newData) {
         clear();
         return nullptr;
       }
 
       if (_canFree)
-        ASMJIT_FREE(_data);
+        Internal::releaseMemory(_data);
 
       _data = newData;
       _capacity = to + sizeof(intptr_t) - 1;
@@ -105,12 +105,12 @@ ASMJIT_FAVOR_SIZE char* StringBuilder::prepare(uint32_t op, size_t len) noexcept
       }
 
       to = Utils::alignTo<size_t>(to, sizeof(intptr_t));
-      char* newData = static_cast<char*>(ASMJIT_ALLOC(to + sizeof(intptr_t)));
+      char* newData = static_cast<char*>(Internal::allocMemory(to + sizeof(intptr_t)));
       if (!newData) return nullptr;
 
       ::memcpy(newData, _data, _length);
       if (_canFree)
-        ASMJIT_FREE(_data);
+        Internal::releaseMemory(_data);
 
       _data = newData;
       _capacity = to + sizeof(intptr_t) - 1;
@@ -134,14 +134,14 @@ ASMJIT_FAVOR_SIZE Error StringBuilder::reserve(size_t to) noexcept {
     return DebugUtils::errored(kErrorNoHeapMemory);
 
   to = Utils::alignTo<size_t>(to, sizeof(intptr_t));
-  char* newData = static_cast<char*>(ASMJIT_ALLOC(to + sizeof(intptr_t)));
+  char* newData = static_cast<char*>(Internal::allocMemory(to + sizeof(intptr_t)));
 
   if (!newData)
     return DebugUtils::errored(kErrorNoHeapMemory);
 
   ::memcpy(newData, _data, _length + 1);
   if (_canFree)
-    ASMJIT_FREE(_data);
+    Internal::releaseMemory(_data);
 
   _data = newData;
   _capacity = to + sizeof(intptr_t) - 1;

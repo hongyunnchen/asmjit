@@ -915,10 +915,10 @@ typedef unsigned __int64 uint64_t;
 # endif // ASMJIT_ARCH_X86
 #endif // ASMJIT_BUILD_HOST
 
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-# define ASMJIT_ENUM(NAME) enum NAME : uint32_t
+#if ASMJIT_CC_MSC
+# define ASMJIT_UINT64_C(x) x##u64
 #else
-# define ASMJIT_ENUM(NAME) enum NAME
+# define ASMJIT_UINT64_C(x) x##ull
 #endif
 
 #if ASMJIT_ARCH_LE
@@ -926,42 +926,6 @@ typedef unsigned __int64 uint64_t;
 #else
 # define ASMJIT_PACK32_4x8(A, B, C, D) ((D) + ((C) << 8) + ((B) << 16) + ((A) << 24))
 #endif
-
-#if !defined(ASMJIT_ALLOC) && !defined(ASMJIT_REALLOC) && !defined(ASMJIT_FREE)
-# define ASMJIT_ALLOC(SIZE) ::malloc(SIZE)
-# define ASMJIT_REALLOC(PTR, SIZE) ::realloc(PTR, SIZE)
-# define ASMJIT_FREE(PTR) ::free(PTR)
-#else
-# if !defined(ASMJIT_ALLOC) || !defined(ASMJIT_REALLOC) || !defined(ASMJIT_FREE)
-#  error "[asmjit] You must provide ASMJIT_ALLOC, ASMJIT_REALLOC and ASMJIT_FREE."
-# endif
-#endif // !ASMJIT_ALLOC && !ASMJIT_REALLOC && !ASMJIT_FREE
-
-#if ASMJIT_CC_HAS_DELETE_FUNCTION
-#define ASMJIT_NONCONSTRUCTIBLE(...)                         \
-private:                                                     \
-  __VA_ARGS__() = delete;                                    \
-  __VA_ARGS__(const __VA_ARGS__& other) = delete;            \
-  __VA_ARGS__& operator=(const __VA_ARGS__& other) = delete; \
-public:
-#define ASMJIT_NONCOPYABLE(...)                              \
-private:                                                     \
-  __VA_ARGS__(const __VA_ARGS__& other) = delete;            \
-  __VA_ARGS__& operator=(const __VA_ARGS__& other) = delete; \
-public:
-#else
-#define ASMJIT_NONCONSTRUCTIBLE(...)                         \
-private:                                                     \
-  inline __VA_ARGS__();                                      \
-  inline __VA_ARGS__(const __VA_ARGS__& other);              \
-  inline __VA_ARGS__& operator=(const __VA_ARGS__& other);   \
-public:
-#define ASMJIT_NONCOPYABLE(...)                              \
-private:                                                     \
-  inline __VA_ARGS__(const __VA_ARGS__& other);              \
-  inline __VA_ARGS__& operator=(const __VA_ARGS__& other);   \
-public:
-#endif // ASMJIT_CC_HAS_DELETE_FUNCTION
 
 // Internal macros that are only used when building AsmJit itself.
 #if defined(ASMJIT_EXPORTS)

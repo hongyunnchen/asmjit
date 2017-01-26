@@ -66,13 +66,9 @@
 // [Custom Macros]
 // ============================================================================
 
-// [INT64_C & UINT64_C]
-#if defined(ASMJIT_UNDEF_INT64_C)
-# undef INT64_C
-# undef ASMJIT_UNDEF_INT64_C
-#endif // ASMJIT_UNDEF_INT64_C
+// [ASMJIT_NON...]
+#undef ASMJIT_NONCONSTRUCTIBLE
+#undef ASMJIT_NONCOPYABLE
 
-#if defined(ASMJIT_UNDEF_UINT64_C)
-# undef UINT64_C
-# undef ASMJIT_UNDEF_UINT64_C
-#endif // ASMJIT_UNDEF_INT64_C
+// [ASMJIT_ENUM]
+#undef ASMJIT_ENUM

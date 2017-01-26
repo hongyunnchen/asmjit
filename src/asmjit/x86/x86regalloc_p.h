@@ -642,7 +642,7 @@ public:
     return X86Mem(Init,
       cc()->_nativeGpReg.getType(), vreg->getId(),
       Reg::kRegNone, kInvalidValue,
-      0, 0, Mem::Mem::kSignatureMemRegHomeFlag);
+      0, 0, Mem::kSignatureMemRegHomeFlag);
   }
 
   // --------------------------------------------------------------------------

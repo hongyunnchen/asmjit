@@ -93,24 +93,6 @@ ASMJIT_ENUM(JumpType) {
 } // AnyInst namespace
 
 // ============================================================================
-// [asmjit::ptr_as_func / func_as_ptr]
-// ============================================================================
-
-namespace Internal {
-
-//! Cast designed to cast between function and void* pointers.
-template<typename Dst, typename Src>
-static ASMJIT_INLINE Dst ptr_cast(Src p) noexcept { return (Dst)p; }
-
-} // Internal namespace
-
-template<typename Func>
-static ASMJIT_INLINE Func ptr_as_func(void* func) noexcept { return Internal::ptr_cast<Func, void*>(func); }
-
-template<typename Func>
-static ASMJIT_INLINE void* func_as_ptr(Func func) noexcept { return Internal::ptr_cast<void*, Func>(func); }
-
-// ============================================================================
 // [asmjit::Error]
 // ============================================================================
 
@@ -244,6 +226,40 @@ ASMJIT_ENUM(ErrorCode) {
   //! Count of AsmJit error codes.
   kErrorCount
 };
+
+// ============================================================================
+// [asmjit::Internal]
+// ============================================================================
+
+namespace Internal {
+
+#if defined(ASMJIT_CUSTOM_ALLOC)   && \
+    defined(ASMJIT_CUSTOM_REALLOC) && \
+    defined(ASMJIT_CUSTOM_FREE)
+static ASMJIT_INLINE void* allocMemory(size_t size) noexcept { return ASMJIT_CUSTOM_ALLOC(size); }
+static ASMJIT_INLINE void* reallocMemory(void* p, size_t size) noexcept { return ASMJIT_CUSTOM_REALLOC(p, size); }
+static ASMJIT_INLINE void releaseMemory(void* p) noexcept { ASMJIT_CUSTOM_FREE(p); }
+#elif !defined(ASMJIT_CUSTOM_ALLOC)   && \
+      !defined(ASMJIT_CUSTOM_REALLOC) && \
+      !defined(ASMJIT_CUSTOM_FREE)
+static ASMJIT_INLINE void* allocMemory(size_t size) noexcept { return ::malloc(size); }
+static ASMJIT_INLINE void* reallocMemory(void* p, size_t size) noexcept { return ::realloc(p, size); }
+static ASMJIT_INLINE void releaseMemory(void* p) noexcept { ::free(p); }
+#else
+# error "[asmjit] You must provide either none or all of [ASMJIT_ALLOC, ASMJIT_REALLOC, ASMJIT_FREE]"
+#endif
+
+//! Cast designed to cast between function and void* pointers.
+template<typename Dst, typename Src>
+static ASMJIT_INLINE Dst ptr_cast(Src p) noexcept { return (Dst)p; }
+
+} // Internal namespace
+
+template<typename Func>
+static ASMJIT_INLINE Func ptr_as_func(void* func) noexcept { return Internal::ptr_cast<Func, void*>(func); }
+
+template<typename Func>
+static ASMJIT_INLINE void* func_as_ptr(Func func) noexcept { return Internal::ptr_cast<void*, Func>(func); }
 
 // ============================================================================
 // [asmjit::DebugUtils]

@@ -59,9 +59,9 @@ UNIT(base_utils) {
   INFO("Utils::isInt32()");
   EXPECT(Utils::isInt32( 2147483647    ) == true, "Utils::isInt32<int> should return true if inside");
   EXPECT(Utils::isInt32(-2147483647 - 1) == true, "Utils::isInt32<int> should return true if inside");
-  EXPECT(Utils::isInt32(UINT64_C(2147483648)) == false, "Utils::isInt32<int> should return false if outside");
-  EXPECT(Utils::isInt32(UINT64_C(0xFFFFFFFF)) == false, "Utils::isInt32<int> should return false if outside");
-  EXPECT(Utils::isInt32(UINT64_C(0xFFFFFFFF) + 1) == false, "Utils::isInt32<int> should return false if outside");
+  EXPECT(Utils::isInt32(ASMJIT_UINT64_C(2147483648)) == false, "Utils::isInt32<int> should return false if outside");
+  EXPECT(Utils::isInt32(ASMJIT_UINT64_C(0xFFFFFFFF)) == false, "Utils::isInt32<int> should return false if outside");
+  EXPECT(Utils::isInt32(ASMJIT_UINT64_C(0xFFFFFFFF) + 1) == false, "Utils::isInt32<int> should return false if outside");
 
   INFO("Utils::isUInt8()");
   EXPECT(Utils::isUInt8(0)   == true , "Utils::isUInt8<> should return true if inside");
@@ -82,8 +82,8 @@ UNIT(base_utils) {
   EXPECT(Utils::isUInt16(-1)    == false, "Utils::isUInt16<> should return false if negative");
 
   INFO("Utils::isUInt32()");
-  EXPECT(Utils::isUInt32(UINT64_C(0xFFFFFFFF)) == true, "Utils::isUInt32<uint64_t> should return true if inside");
-  EXPECT(Utils::isUInt32(UINT64_C(0xFFFFFFFF) + 1) == false, "Utils::isUInt32<uint64_t> should return false if outside");
+  EXPECT(Utils::isUInt32(ASMJIT_UINT64_C(0xFFFFFFFF)) == true, "Utils::isUInt32<uint64_t> should return true if inside");
+  EXPECT(Utils::isUInt32(ASMJIT_UINT64_C(0xFFFFFFFF) + 1) == false, "Utils::isUInt32<uint64_t> should return false if outside");
   EXPECT(Utils::isUInt32(-1) == false, "Utils::isUInt32<int> should return false if negative");
 
   INFO("Utils::isPower2()");

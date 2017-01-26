@@ -191,7 +191,7 @@ UNIT(base_operand) {
   EXPECT(m.getOffsetLo32()  == -1        , "Memory operand must hold a 32-bit offset");
   EXPECT(m.getOffset()      == -1        , "32-bit offset must be sign extended to 64 bits");
 
-  int64_t x = int64_t(UINT64_C(0xFF00FF0000000001));
+  int64_t x = int64_t(ASMJIT_UINT64_C(0xFF00FF0000000001));
   m.setOffset(x);
   EXPECT(m.getOffset()      == x         , "Memory operand must hold a 64-bit offset");
   EXPECT(m.getOffsetLo32()  == 1         , "Memory operand must return correct low offset DWORD");

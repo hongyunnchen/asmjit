@@ -82,21 +82,36 @@
 // [Custom Macros]
 // ============================================================================
 
-// [INT64_C & UINT64_C]
-#if !defined(INT64_C)
-# if defined(_MSC_VER)
-#  define INT64_C(x) (x##i64)
-# else
-#  define INT64_C(x) (x##ll)
-# endif
-# define ASMJIT_UNDEF_INT64_C
-#endif
+// [ASMJIT_NON...]
+#if ASMJIT_CC_HAS_DELETE_FUNCTION
+#define ASMJIT_NONCONSTRUCTIBLE(...)                         \
+private:                                                     \
+  __VA_ARGS__() = delete;                                    \
+  __VA_ARGS__(const __VA_ARGS__& other) = delete;            \
+  __VA_ARGS__& operator=(const __VA_ARGS__& other) = delete; \
+public:
+#define ASMJIT_NONCOPYABLE(...)                              \
+private:                                                     \
+  __VA_ARGS__(const __VA_ARGS__& other) = delete;            \
+  __VA_ARGS__& operator=(const __VA_ARGS__& other) = delete; \
+public:
+#else
+#define ASMJIT_NONCONSTRUCTIBLE(...)                         \
+private:                                                     \
+  inline __VA_ARGS__();                                      \
+  inline __VA_ARGS__(const __VA_ARGS__& other);              \
+  inline __VA_ARGS__& operator=(const __VA_ARGS__& other);   \
+public:
+#define ASMJIT_NONCOPYABLE(...)                              \
+private:                                                     \
+  inline __VA_ARGS__(const __VA_ARGS__& other);              \
+  inline __VA_ARGS__& operator=(const __VA_ARGS__& other);   \
+public:
+#endif // ASMJIT_CC_HAS_DELETE_FUNCTION
 
-#if !defined(UINT64_C)
-# if defined(_MSC_VER)
-#  define UINT64_C(x) (x##u64)
-# else
-#  define UINT64_C(x) (x##ull)
-# endif
-# define ASMJIT_UNDEF_UINT64_C
+// [ASMJIT_ENUM]
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+# define ASMJIT_ENUM(NAME) enum NAME : uint32_t
+#else
+# define ASMJIT_ENUM(NAME) enum NAME
 #endif
