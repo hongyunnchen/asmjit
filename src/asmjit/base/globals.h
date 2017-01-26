@@ -246,7 +246,7 @@ static ASMJIT_INLINE void* allocMemory(size_t size) noexcept { return ::malloc(s
 static ASMJIT_INLINE void* reallocMemory(void* p, size_t size) noexcept { return ::realloc(p, size); }
 static ASMJIT_INLINE void releaseMemory(void* p) noexcept { ::free(p); }
 #else
-# error "[asmjit] You must provide either none or all of [ASMJIT_ALLOC, ASMJIT_REALLOC, ASMJIT_FREE]"
+# error "[asmjit] You must provide either none or all of ASMJIT_CUSTOM_[ALLOC|REALLOC|FREE]"
 #endif
 
 //! Cast designed to cast between function and void* pointers.

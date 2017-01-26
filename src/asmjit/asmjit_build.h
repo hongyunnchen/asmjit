@@ -916,7 +916,7 @@ typedef unsigned __int64 uint64_t;
 #endif // ASMJIT_BUILD_HOST
 
 #if ASMJIT_CC_MSC
-# define ASMJIT_UINT64_C(x) x##u64
+# define ASMJIT_UINT64_C(x) x##ui64
 #else
 # define ASMJIT_UINT64_C(x) x##ull
 #endif
